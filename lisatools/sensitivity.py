@@ -690,20 +690,7 @@ class SensitivityMatrix:
             ax is not None and (isinstance(ax, list) or isinstance(ax, np.ndarray))
         ):
             if ax is None and fig is None:
-                outer_shape = self.shape[:-1]
-                if len(outer_shape) == 2:
-                    nrows = outer_shape[0]
-                    ncols = outer_shape[1]
-                elif len(outer_shape) == 1:
-                    nrows = 1
-                    ncols = outer_shape[0]
-
-                fig, ax = plt.subplots(nrows, ncols, sharex=True, sharey=True)
-                try:
-                    ax = ax.ravel()
-                except AttributeError:
-                    ax = [ax]  # just one axis object, no list
-
+                fig,ax = self.setup_axes()
             else:
                 assert len(ax) == np.prod(self.shape[:-1])
 
@@ -732,6 +719,29 @@ class SensitivityMatrix:
             )
 
         return (fig, ax)
+    
+    def setup_axes(self):
+        """Hand back an axis setup appropriate for the setup of the sensitivity matrix
+
+        Returns:
+            Matplotlib figure and axes objects in a 2-tuple.
+
+        """
+        outer_shape = self.shape[:-1]
+        if len(outer_shape) == 2:
+            nrows = outer_shape[0]
+            ncols = outer_shape[1]
+        elif len(outer_shape) == 1:
+            nrows = 1
+            ncols = outer_shape[0]
+
+        fig, ax = plt.subplots(nrows, ncols, sharex=True, sharey=True)
+        try:
+            ax = ax.ravel()
+        except AttributeError:
+            ax = [ax]  # just one axis object, no list
+        
+        return(fig, ax)
 
 
 class XYZ1SensitivityMatrix(SensitivityMatrix):

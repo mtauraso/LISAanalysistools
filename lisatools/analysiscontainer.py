@@ -106,7 +106,7 @@ class AnalysisContainer:
             Matplotlib figure and axes object in a 2-tuple.
 
         """
-        fig, ax = self.sens_mat.loglog(char_strain=True)
+        fig, ax = self.sens_mat.setup_axes()
         if self.sens_mat.ndim == 3:
             # 3x3 most likely
             for i in range(self.sens_mat.shape[0]):
@@ -126,7 +126,7 @@ class AnalysisContainer:
                     self.data_res_arr.f_arr,
                     self.data_res_arr.f_arr * np.abs(self.data_res_arr[i]),
                 )
-        return (fig, ax)
+        return self.sens_mat.loglog(char_strain=True, fig=fig, ax=ax)
 
     def inner_product(self, **kwargs: dict) -> float | complex:
         """Return the inner product of the current set of information
